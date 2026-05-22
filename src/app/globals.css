@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --background: #050505;
+  --foreground: #ededed;
+}
+
+html {
+  /* Lenis handles smooth scrolling natively now */
+  /* Offset for fixed navbar (80px tall) */
+  scroll-padding-top: 80px;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure canvas doesn't trigger scroll behaviors directly */
+canvas {
+  touch-action: none;
+}
+
+/* Smooth scrollbar on webkit */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(108, 196, 23, 0.3);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(108, 196, 23, 0.6);
+}
+
+/* Perspective utility for 3D tilt cards */
+.perspective-1000 {
+  perspective: 1000px;
+}
