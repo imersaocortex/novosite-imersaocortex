@@ -5,6 +5,10 @@ import { motion, useScroll, useTransform } from "framer-motion";
 
 const FRAME_COUNT = 40;
 
+// Linear interpolation clamped between 0 and 1
+const lerp01 = (v: number, start: number, end: number) =>
+  Math.max(0, Math.min(1, (v - start) / (end - start)));
+
 const BrainScrollRotate = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -27,25 +31,75 @@ const BrainScrollRotate = () => {
   // Declare all hooks at the top level to obey Rules of Hooks
   const currentFrame = useTransform(scrollYProgress, [0, 1], [0, FRAME_COUNT - 1]);
 
-  // Slide 0: IMERSÃO CORTEX — aparece de 0% a 22% (some completamente antes do próximo aparecer)
-  const opacity0 = useTransform(scrollYProgress, [0, 0.05, 0.20], [1, 1, 0], { clamp: true });
-  const y0 = useTransform(scrollYProgress, [0, 0.20], [0, -80], { clamp: true });
-  const filter0 = useTransform(scrollYProgress, [0.05, 0.20], ["blur(0px)", "blur(20px)"], { clamp: true });
+  // Slide 0: IMERSÃO CORTEX — visível de 0% a 20%. Fora desse range = 0.
+  const opacity0 = useTransform(scrollYProgress, (v) => {
+    if (v <= 0.05) return 1;
+    if (v >= 0.20) return 0;
+    return 1 - lerp01(v, 0.05, 0.20);
+  });
+  const y0 = useTransform(scrollYProgress, (v) =>
+    v >= 0.20 ? -80 : lerp01(v, 0, 0.20) * -80
+  );
+  const filter0 = useTransform(scrollYProgress, (v) => {
+    if (v <= 0.05) return "blur(0px)";
+    if (v >= 0.20) return "blur(20px)";
+    return `blur(${lerp01(v, 0.05, 0.20) * 20}px)`;
+  });
 
-  // Slide 1: Oferecemos — aparece de 25% a 47% (sem overlap com anterior)
-  const opacity30 = useTransform(scrollYProgress, [0.25, 0.33, 0.42, 0.47], [0, 1, 1, 0], { clamp: true });
-  const x30 = useTransform(scrollYProgress, [0.25, 0.33, 0.42, 0.47], [-50, 0, 0, -50], { clamp: true });
-  const filter30 = useTransform(scrollYProgress, [0.25, 0.33, 0.42, 0.47], ["blur(10px)", "blur(0px)", "blur(0px)", "blur(10px)"], { clamp: true });
+  // Slide 1: Oferecemos — visível de 25% a 47%. Fora desse range = 0.
+  const opacity30 = useTransform(scrollYProgress, (v) => {
+    if (v < 0.25 || v > 0.47) return 0;
+    if (v <= 0.33) return lerp01(v, 0.25, 0.33);
+    if (v <= 0.42) return 1;
+    return 1 - lerp01(v, 0.42, 0.47);
+  });
+  const x30 = useTransform(scrollYProgress, (v) => {
+    if (v < 0.25 || v > 0.47) return v < 0.25 ? -50 : -50;
+    if (v <= 0.33) return -50 + lerp01(v, 0.25, 0.33) * 50;
+    if (v <= 0.42) return 0;
+    return lerp01(v, 0.42, 0.47) * -50;
+  });
+  const filter30 = useTransform(scrollYProgress, (v) => {
+    if (v < 0.25 || v > 0.47) return "blur(10px)";
+    if (v <= 0.33) return `blur(${(1 - lerp01(v, 0.25, 0.33)) * 10}px)`;
+    if (v <= 0.42) return "blur(0px)";
+    return `blur(${lerp01(v, 0.42, 0.47) * 10}px)`;
+  });
 
-  // Slide 2: Acreditamos — aparece de 50% a 72% (sem overlap com anterior)
-  const opacity60 = useTransform(scrollYProgress, [0.50, 0.58, 0.67, 0.72], [0, 1, 1, 0], { clamp: true });
-  const x60 = useTransform(scrollYProgress, [0.50, 0.58, 0.67, 0.72], [50, 0, 0, 50], { clamp: true });
-  const filter60 = useTransform(scrollYProgress, [0.50, 0.58, 0.67, 0.72], ["blur(10px)", "blur(0px)", "blur(0px)", "blur(10px)"], { clamp: true });
+  // Slide 2: Acreditamos — visível de 50% a 72%. Fora desse range = 0.
+  const opacity60 = useTransform(scrollYProgress, (v) => {
+    if (v < 0.50 || v > 0.72) return 0;
+    if (v <= 0.58) return lerp01(v, 0.50, 0.58);
+    if (v <= 0.67) return 1;
+    return 1 - lerp01(v, 0.67, 0.72);
+  });
+  const x60 = useTransform(scrollYProgress, (v) => {
+    if (v < 0.50 || v > 0.72) return v < 0.50 ? 50 : 50;
+    if (v <= 0.58) return 50 - lerp01(v, 0.50, 0.58) * 50;
+    if (v <= 0.67) return 0;
+    return lerp01(v, 0.67, 0.72) * 50;
+  });
+  const filter60 = useTransform(scrollYProgress, (v) => {
+    if (v < 0.50 || v > 0.72) return "blur(10px)";
+    if (v <= 0.58) return `blur(${(1 - lerp01(v, 0.50, 0.58)) * 10}px)`;
+    if (v <= 0.67) return "blur(0px)";
+    return `blur(${lerp01(v, 0.67, 0.72) * 10}px)`;
+  });
 
-  // Slide 3: Nossa missão — aparece de 75% a 100% (sem overlap com anterior)
-  const opacity90 = useTransform(scrollYProgress, [0.75, 0.85, 1], [0, 1, 1], { clamp: true });
-  const y90 = useTransform(scrollYProgress, [0.75, 0.85], [50, 0], { clamp: true });
-  const filter90 = useTransform(scrollYProgress, [0.75, 0.85], ["blur(10px)", "blur(0px)"], { clamp: true });
+  // Slide 3: Nossa missão — visível de 75% a 100%. Fora desse range = 0.
+  const opacity90 = useTransform(scrollYProgress, (v) => {
+    if (v < 0.75) return 0;
+    if (v >= 0.85) return 1;
+    return lerp01(v, 0.75, 0.85);
+  });
+  const y90 = useTransform(scrollYProgress, (v) =>
+    v < 0.75 ? 50 : v >= 0.85 ? 0 : 50 - lerp01(v, 0.75, 0.85) * 50
+  );
+  const filter90 = useTransform(scrollYProgress, (v) => {
+    if (v < 0.75) return "blur(10px)";
+    if (v >= 0.85) return "blur(0px)";
+    return `blur(${(1 - lerp01(v, 0.75, 0.85)) * 10}px)`;
+  });
 
   // Preload images
   useEffect(() => {
