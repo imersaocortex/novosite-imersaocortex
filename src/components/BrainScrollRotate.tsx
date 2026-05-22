@@ -27,10 +27,10 @@ const BrainScrollRotate = () => {
   // Declare all hooks at the top level to obey Rules of Hooks
   const currentFrame = useTransform(scrollYProgress, [0, 1], [0, FRAME_COUNT - 1]);
 
-  // 0%
-  const opacity0 = useTransform(scrollYProgress, [0, 0.1, 0.15], [1, 1, 0]);
-  const y0 = useTransform(scrollYProgress, [0, 0.15], [0, -50]);
-  const filter0 = useTransform(scrollYProgress, [0.1, 0.15], ["blur(0px)", "blur(10px)"]);
+  // 0% - gradual fade out over a long scroll range
+  const opacity0 = useTransform(scrollYProgress, [0, 0.05, 0.4], [1, 1, 0]);
+  const y0 = useTransform(scrollYProgress, [0, 0.4], [0, -80]);
+  const filter0 = useTransform(scrollYProgress, [0.05, 0.4], ["blur(0px)", "blur(16px)"]);
 
   // 30%
   const opacity30 = useTransform(scrollYProgress, [0.15, 0.25, 0.35, 0.45], [0, 1, 1, 0]);
