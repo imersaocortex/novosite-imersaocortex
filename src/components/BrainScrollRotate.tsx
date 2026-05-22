@@ -16,6 +16,14 @@ const BrainScrollRotate = () => {
     offset: ["start start", "end end"]
   });
 
+  // Fade out effect when the entire hero container scrolls up out of view
+  const { scrollYProgress: exitProgress } = useScroll({
+    target: containerRef,
+    offset: ["end end", "end start"]
+  });
+  // Fade out during the first 30% of its exit
+  const exitOpacity = useTransform(exitProgress, [0, 0.3], [1, 0]);
+
   // Declare all hooks at the top level to obey Rules of Hooks
   const currentFrame = useTransform(scrollYProgress, [0, 1], [0, FRAME_COUNT - 1]);
 
@@ -151,74 +159,77 @@ const BrainScrollRotate = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/80 via-transparent to-[#050505]/80 pointer-events-none" />
         <div className="absolute inset-0 bg-black/30 pointer-events-none" />
         
-        {/* 0% Scroll - Centralizado */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
-          style={{
-            opacity: opacity0,
-            y: y0,
-            filter: filter0
-          }}
-        >
-          <div className="text-center px-4 max-w-4xl">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white/90 mb-6 drop-shadow-lg">
-              IMERSÃO <span className="text-[#6CC417] drop-shadow-[0_0_30px_rgba(108,196,23,0.8)]">CORTEX</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-white/60 font-light tracking-wide drop-shadow">
-              Automações Inteligentes
-            </p>
-          </div>
-        </motion.div>
+        {/* Wrapped content fading out during exit scroll */}
+        <motion.div style={{ opacity: exitOpacity }} className="absolute inset-0">
+          {/* 0% Scroll - Centralizado */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{
+              opacity: opacity0,
+              y: y0,
+              filter: filter0
+            }}
+          >
+            <div className="text-center px-4 max-w-4xl">
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white/90 mb-6 drop-shadow-lg">
+                IMERSÃO <span className="text-[#6CC417] drop-shadow-[0_0_30px_rgba(108,196,23,0.8)]">CORTEX</span>
+              </h1>
+              <p className="text-xl md:text-2xl text-white/60 font-light tracking-wide drop-shadow">
+                Automações Inteligentes
+              </p>
+            </div>
+          </motion.div>
 
-        {/* 30% Scroll - Alinhado à esquerda */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-start px-8 md:px-24 pointer-events-none"
-          style={{
-            opacity: opacity30,
-            x: x30,
-            filter: filter30
-          }}
-        >
-          <div className="max-w-xl">
-            <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white/90 leading-tight drop-shadow-lg">
-              Oferecemos uma gama completa de serviços tecnológicos para transformar o seu negócio
-            </h2>
-          </div>
-        </motion.div>
+          {/* 30% Scroll - Alinhado à esquerda */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-start px-8 md:px-24 pointer-events-none"
+            style={{
+              opacity: opacity30,
+              x: x30,
+              filter: filter30
+            }}
+          >
+            <div className="max-w-xl">
+              <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white/90 leading-tight drop-shadow-lg">
+                Oferecemos uma gama completa de serviços tecnológicos para transformar o seu negócio
+              </h2>
+            </div>
+          </motion.div>
 
-        {/* 60% Scroll - Alinhado à direita */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-end px-8 md:px-24 pointer-events-none"
-          style={{
-            opacity: opacity60,
-            x: x60,
-            filter: filter60
-          }}
-        >
-          <div className="max-w-xl text-right">
-            <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white/90 leading-tight drop-shadow-lg">
-              Acreditamos que cada projeto é uma oportunidade para criar algo extraordinário. Vamos construir o futuro juntos.
-            </h2>
-          </div>
-        </motion.div>
+          {/* 60% Scroll - Alinhado à direita */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-end px-8 md:px-24 pointer-events-none"
+            style={{
+              opacity: opacity60,
+              x: x60,
+              filter: filter60
+            }}
+          >
+            <div className="max-w-xl text-right">
+              <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white/90 leading-tight drop-shadow-lg">
+                Acreditamos que cada projeto é uma oportunidade para criar algo extraordinário. Vamos construir o futuro juntos.
+              </h2>
+            </div>
+          </motion.div>
 
-        {/* 90% Scroll - Centralizado */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
-          style={{
-            opacity: opacity90,
-            y: y90,
-            filter: filter90
-          }}
-        >
-          <div className="text-center px-4 max-w-4xl">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-white/90 leading-tight mb-8 drop-shadow-lg">
-              Nossa missão é transformar a maneira como as empresas se conectam com seus clientes
-            </h2>
-            <p className="text-xl md:text-2xl text-white/60 font-light tracking-wide max-w-2xl mx-auto drop-shadow">
-              oferecendo soluções tecnológicas que vão além do convencional.
-            </p>
-          </div>
+          {/* 90% Scroll - Centralizado */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{
+              opacity: opacity90,
+              y: y90,
+              filter: filter90
+            }}
+          >
+            <div className="text-center px-4 max-w-4xl">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-white/90 leading-tight mb-8 drop-shadow-lg">
+                Nossa missão é transformar a maneira como as empresas se conectam com seus clientes
+              </h2>
+              <p className="text-xl md:text-2xl text-white/60 font-light tracking-wide max-w-2xl mx-auto drop-shadow">
+                oferecendo soluções tecnológicas que vão além do convencional.
+              </p>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </div>
