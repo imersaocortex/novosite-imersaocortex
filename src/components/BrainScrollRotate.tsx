@@ -27,25 +27,25 @@ const BrainScrollRotate = () => {
   // Declare all hooks at the top level to obey Rules of Hooks
   const currentFrame = useTransform(scrollYProgress, [0, 1], [0, FRAME_COUNT - 1]);
 
-  // 0% - gradual fade out over a long scroll range
-  const opacity0 = useTransform(scrollYProgress, [0, 0.05, 0.4], [1, 1, 0]);
-  const y0 = useTransform(scrollYProgress, [0, 0.4], [0, -80]);
-  const filter0 = useTransform(scrollYProgress, [0.05, 0.4], ["blur(0px)", "blur(16px)"]);
+  // Slide 0: IMERSÃO CORTEX — aparece de 0% a 22% (some completamente antes do próximo aparecer)
+  const opacity0 = useTransform(scrollYProgress, [0, 0.05, 0.20], [1, 1, 0], { clamp: true });
+  const y0 = useTransform(scrollYProgress, [0, 0.20], [0, -80], { clamp: true });
+  const filter0 = useTransform(scrollYProgress, [0.05, 0.20], ["blur(0px)", "blur(20px)"], { clamp: true });
 
-  // 30%
-  const opacity30 = useTransform(scrollYProgress, [0.15, 0.25, 0.35, 0.45], [0, 1, 1, 0]);
-  const x30 = useTransform(scrollYProgress, [0.15, 0.25, 0.35, 0.45], [-50, 0, 0, -50]);
-  const filter30 = useTransform(scrollYProgress, [0.15, 0.25, 0.35, 0.45], ["blur(10px)", "blur(0px)", "blur(0px)", "blur(10px)"]);
+  // Slide 1: Oferecemos — aparece de 25% a 47% (sem overlap com anterior)
+  const opacity30 = useTransform(scrollYProgress, [0.25, 0.33, 0.42, 0.47], [0, 1, 1, 0], { clamp: true });
+  const x30 = useTransform(scrollYProgress, [0.25, 0.33, 0.42, 0.47], [-50, 0, 0, -50], { clamp: true });
+  const filter30 = useTransform(scrollYProgress, [0.25, 0.33, 0.42, 0.47], ["blur(10px)", "blur(0px)", "blur(0px)", "blur(10px)"], { clamp: true });
 
-  // 60%
-  const opacity60 = useTransform(scrollYProgress, [0.45, 0.55, 0.65, 0.75], [0, 1, 1, 0]);
-  const x60 = useTransform(scrollYProgress, [0.45, 0.55, 0.65, 0.75], [50, 0, 0, 50]);
-  const filter60 = useTransform(scrollYProgress, [0.45, 0.55, 0.65, 0.75], ["blur(10px)", "blur(0px)", "blur(0px)", "blur(10px)"]);
+  // Slide 2: Acreditamos — aparece de 50% a 72% (sem overlap com anterior)
+  const opacity60 = useTransform(scrollYProgress, [0.50, 0.58, 0.67, 0.72], [0, 1, 1, 0], { clamp: true });
+  const x60 = useTransform(scrollYProgress, [0.50, 0.58, 0.67, 0.72], [50, 0, 0, 50], { clamp: true });
+  const filter60 = useTransform(scrollYProgress, [0.50, 0.58, 0.67, 0.72], ["blur(10px)", "blur(0px)", "blur(0px)", "blur(10px)"], { clamp: true });
 
-  // 90%
-  const opacity90 = useTransform(scrollYProgress, [0.75, 0.85, 1], [0, 1, 1]);
-  const y90 = useTransform(scrollYProgress, [0.75, 0.85], [50, 0]);
-  const filter90 = useTransform(scrollYProgress, [0.75, 0.85], ["blur(10px)", "blur(0px)"]);
+  // Slide 3: Nossa missão — aparece de 75% a 100% (sem overlap com anterior)
+  const opacity90 = useTransform(scrollYProgress, [0.75, 0.85, 1], [0, 1, 1], { clamp: true });
+  const y90 = useTransform(scrollYProgress, [0.75, 0.85], [50, 0], { clamp: true });
+  const filter90 = useTransform(scrollYProgress, [0.75, 0.85], ["blur(10px)", "blur(0px)"], { clamp: true });
 
   // Preload images
   useEffect(() => {
